@@ -1,7 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include <Servo.h>
 
-#include "macros.h"
 #include "global_definitions.h"
 
 #include "pixels.h"
@@ -29,6 +28,7 @@ RUNLOOP_PROC( sensors ) {
 
 	state.lightSensorReading = analogRead( LIGHT_SENSOR_PIN );
 
+  // Note: The first time this is called, timeDelta is the difference between millis() and 0.
 	// TODO: Overflow detection?  (That assumes the box is left running for more than 50 days...)
 	lastTime = state.time;
 	state.time = millis();
@@ -79,6 +79,10 @@ loop() {
 	RUNLOOP_PROC_PTR( proc ) = NULL;
 	int i = 0;
 
+  // these are longs rather than unsigned longs.
+  long runloopDuration;
+  long remainingDelay;
+
 	while( 1 ) {
 		proc = runloop[ i ];
 
@@ -91,5 +95,9 @@ loop() {
 		++i;
 	}
 
-	delay( RUNLOOP_DELAY_MS );
+  // Try to keep to RUNLOOP_DELAY_MS as our pulse.
+  runloopDuration = apiaryState.time - millis();
+  remainingDelay = RUNLOOP_DELAY_MS - runloopDuration;
+
+	delay( remainingDelay < 0 ? 0 : remainingDelay );
 }
