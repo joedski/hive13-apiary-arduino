@@ -5,7 +5,7 @@
 
 //////// Public Functions
 
-struct AnimationProgressModel animation_incrementProgress( struct AnimationProgressModel animationModel, unsigned long timeDelta ) {
+struct AnimationTimingModel animation_incrementProgress( struct AnimationTimingModel animationModel, unsigned long timeDelta ) {
 	int normalProgressIcrement = normalProgressIcrementForDelta( animationModel, timeDelta );
 
 	animationModel.progress += progressIncrementForRate( normalProgressIcrement, animationModel.rate100 );
@@ -17,9 +17,8 @@ struct AnimationProgressModel animation_incrementProgress( struct AnimationProgr
 
 
 //////// Utils
-// These are already exposed 
 
-int normalProgressIcrementForDelta( struct AnimationProgressModel model, unsigned long msDelta ) {
+int normalProgressIcrementForDelta( struct AnimationTimingModel model, unsigned long msDelta ) {
 	return (int)(((unsigned long) ANIMATION_MAX_PROGRESS) * msDelta / model.normalDuration);
 }
 

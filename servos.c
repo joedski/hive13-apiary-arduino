@@ -1,15 +1,10 @@
 
 #include "servos.h"
+#include "animation.h"
 
 
 
-/***
-
-***/
-
-
-
-// Static Initialization
+//////// Static Initialization
 
 #define SERVO_POSITION_MAX 100
 #define SERVO_POSITION_MIN 0
@@ -54,6 +49,7 @@ int mapLightSensorToServoValue( int lightSensorReading ) {
 	// Originally, we used:
 	//     servoLight = map( lightReading, MIN_LIGHT, MAX_LIGHT, 6, 1 );
 	//     return constrain( servoLight, 1, 10 );
+	// TODO: Rewrite this to just adjust the animation rate like what we've done in pixels.c.
 	int mapped = map( lightSensorReading, MIN_LIGHT, MAX_LIGHT, SERVO_SIGNAL_MAP_MAX, 0 );
 	return constrain( mapped, SERVO_SIGNAL_MIN, SERVO_SIGNAL_MAX );
 }

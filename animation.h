@@ -5,7 +5,7 @@
 
 #define ANIMATION_PRORGESS_MAX 65535
 
-struct AnimationProgressModel {
+struct AnimationTimingModel {
 	// Current progress of the animation.
 	unsigned int progress;
 	// The duration in milliseconds of the animation when playing at 1x rate.
@@ -16,7 +16,7 @@ struct AnimationProgressModel {
 };
 
 // Increments the animation progress by a certain delta.  Takes into account the animation's current rate.
-struct AnimationProgressModel animation_incrementProgress( struct AnimationProgressModel animationModel, unsigned long timeDelta );
+struct AnimationTimingModel animation_incrementProgress( struct AnimationTimingModel animationModel, unsigned long timeDelta );
 
 
 

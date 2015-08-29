@@ -24,8 +24,8 @@
 // The range of readings considered useful out of the full 0 ~ 1023 range.
 // Although 500 (covered) ~ 900 (uncovered) was the actual range determined,
 // adding a margin of 50 guarantees the edge values being used.
-#define MIN_LIGHT 550
-#define MAX_LIGHT 850
+#define LIGHT_MIN 550
+#define LIGHT_MAX 850
 
 
 
@@ -66,7 +66,7 @@ loop() {
 It is similar to do the setup procedures.
 **********/
 
-#define RUNLOOP_DELAY_MS 30
+#define RUNLOOP_DELAY_MS 15
 
 // Base macros so we can make sure all pointers play nice with eachother.
 #define RUNLOOP_PROC_NAME(procName) procName##_loop

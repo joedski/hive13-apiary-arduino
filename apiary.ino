@@ -1,16 +1,16 @@
+
 #include <Adafruit_NeoPixel.h>
 #include <Servo.h>
 
 #include "global_definitions.h"
-
 #include "pixels.h"
+#include "servos.h"
 
 
 
-// Static Initializations
+//////// Static Initializations
 
 struct ApiaryState apiaryState = {
-	// .otherThing = 42, .thingamabob = { .foo = 1, .bar = 2 }, ...
 	// This style of struct initialization is called the "designated initializer style".
 
 	// Analog reading of light sensor.  Varies from 0 to 255.
@@ -21,7 +21,19 @@ struct ApiaryState apiaryState = {
 	, .timeDelta = 0
 };
 
-// Sensor
+
+
+//////// Debug LED
+
+#define DEBUG_LED_PIN 13
+
+SETUP_PROC( debug ) {
+  pinMode( DEBUG_LED_PIN, OUTPUT );
+}
+
+
+
+//////// Sensor
 
 RUNLOOP_PROC( sensors ) {
 	static unsigned long lastTime = 0;
@@ -35,7 +47,9 @@ RUNLOOP_PROC( sensors ) {
 	state.timeDelta = state.time - state.lastTime;
 }
 
-// Main
+
+
+//////// Main Procedures
 
 SETUP_PROC_ARRAY( setupArray ) = {
 	SETUP_PROC_NAME( pixels ),
@@ -52,7 +66,7 @@ RUNLOOP_PROC_ARRAY( runloop ) = {
 
 
 
-// Setup
+//////// Setup
 
 setup() {
 	SETUP_PROC_PTR( proc ) = NULL;
@@ -73,15 +87,11 @@ setup() {
 
 
 
-// Loop
+//////// Loop
 
 loop() {
 	RUNLOOP_PROC_PTR( proc ) = NULL;
 	int i = 0;
-
-  // these are longs rather than unsigned longs.
-  long runloopDuration;
-  long remainingDelay;
 
 	while( 1 ) {
 		proc = runloop[ i ];
@@ -96,8 +106,17 @@ loop() {
 	}
 
   // Try to keep to RUNLOOP_DELAY_MS as our pulse.
-  runloopDuration = apiaryState.time - millis();
-  remainingDelay = RUNLOOP_DELAY_MS - runloopDuration;
+  // these are longs rather than unsigned longs.
+  long runloopDuration = apiaryState.time - millis();
+  long remainingDelay = RUNLOOP_DELAY_MS - runloopDuration;
+  int animationTimeOverran = remainingDelay < 0;
 
-	delay( remainingDelay < 0 ? 0 : remainingDelay );
+  if( animationTimeOverran ) {
+    digitalWrite( DEBUG_LED_PIN, HIGH );
+  }
+  else {
+    digitalWrite( DEBUG_LED_PIN, LOW );
+  }
+
+	delay( animationTimeOverran ? 0 : remainingDelay );
 }
