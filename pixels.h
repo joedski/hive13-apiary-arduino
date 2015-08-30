@@ -1,5 +1,3 @@
-#include "macros.h"
-#include "global_definitions.h"
 
 #ifndef __PIXELS_H__
 #define __PIXELS_H__ yay

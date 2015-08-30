@@ -3,6 +3,7 @@
 #include <Servo.h>
 
 #include "global_definitions.h"
+#include "animation.h"
 #include "pixels.h"
 #include "servos.h"
 
@@ -53,14 +54,14 @@ RUNLOOP_PROC( sensors ) {
 
 SETUP_PROC_ARRAY( setupArray ) = {
 	SETUP_PROC_NAME( pixels ),
-	SETUP_PROC_NAME( servos ),
+	// SETUP_PROC_NAME( servos ),
 	NULL
 };
 
 RUNLOOP_PROC_ARRAY( runloop ) = {
 	RUNLOOP_PROC_NAME( sensors ),
 	RUNLOOP_PROC_NAME( pixels ),
-	RUNLOOP_PROC_NAME( servos ),
+	// RUNLOOP_PROC_NAME( servos ),
 	NULL
 };
 

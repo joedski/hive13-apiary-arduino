@@ -1,7 +1,8 @@
 
 #include "global_definitions.h"
-#include "pixels.h"
 #include "animation.h"
+
+#include "pixels.h"
 
 
 
