@@ -45,7 +45,7 @@ RUNLOOP_PROC( sensors ) {
 	// TODO: Overflow detection?  (That assumes the box is left running for more than 50 days...)
 	lastTime = state.time;
 	state.time = millis();
-	state.timeDelta = state.time - state.lastTime;
+	state.timeDelta = state.time - lastTime;
 }
 
 

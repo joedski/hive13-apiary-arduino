@@ -3,6 +3,13 @@
 
 
 
+//////// Prototypes
+
+int normalProgressIcrementForDelta( struct AnimationTimingModel model, unsigned long msDelta );
+int progressIncrementForRate( int progressIncrement, int rate100 );
+
+
+
 //////// Public Functions
 
 struct AnimationTimingModel animation_incrementProgress( struct AnimationTimingModel animationModel, unsigned long timeDelta ) {

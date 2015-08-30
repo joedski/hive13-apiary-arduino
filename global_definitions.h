@@ -40,9 +40,9 @@ RUNLOOP_PROC( lights ) {
 }
 
 RUNLOOP_PROC_ARRAY( runloop ) = {
-	RUNLOOP_PROC_PTR( lights ),
-	RUNLOOP_PROC_PTR( sensor ),
-	RUNLOOP_PROC_PTR( action ),
+	RUNLOOP_PROC_NAME( lights ),
+	RUNLOOP_PROC_NAME( sensor ),
+	RUNLOOP_PROC_NAME( action ),
 	NULL
 };
 
@@ -75,7 +75,7 @@ It is similar to do the setup procedures.
 
 // Use these.
 #define RUNLOOP_PROC(procName) RUNLOOP_PROC_RETURN_TYPE RUNLOOP_PROC_NAME(procName) RUNLOOP_PROC_ARGS
-#define RUNLOOP_PROC_PTR(procName) RUNLOOP_PROC_RETURN_TYPE (* RUNLOOP_PROC_NAME(procName) ) RUNLOOP_PROC_ARGS
+#define RUNLOOP_PROC_PTR(procName) RUNLOOP_PROC_RETURN_TYPE (* procName ) RUNLOOP_PROC_ARGS
 #define RUNLOOP_PROC_ARRAY(arrayName) RUNLOOP_PROC_RETURN_TYPE (* arrayName []) RUNLOOP_PROC_ARGS
 
 // Setup Macros.  Separate so that they can have different return and argument types from the runloop macros.
@@ -85,7 +85,7 @@ It is similar to do the setup procedures.
 
 // Use these.
 #define SETUP_PROC(procName) SETUP_PROC_RETURN_TYPE SETUP_PROC_NAME(procName) SETUP_PROC_ARGS
-#define SETUP_PROC_PTR(procName) SETUP_PROC_RETURN_TYPE (* SETUP_PROC_NAME(procName) ) SETUP_PROC_ARGS
+#define SETUP_PROC_PTR(procName) SETUP_PROC_RETURN_TYPE (* procName ) SETUP_PROC_ARGS
 #define SETUP_PROC_ARRAY(arrayName) SETUP_PROC_RETURN_TYPE (* arrayName []) SETUP_PROC_ARGS
 
 
