@@ -1,4 +1,6 @@
 
+#include <Servo.h>
+
 #include "global_definitions.h"
 #include "animation.h"
 

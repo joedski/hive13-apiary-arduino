@@ -1,4 +1,6 @@
 
+#include <Adafruit_NeoPixel.h>
+
 #include "global_definitions.h"
 #include "animation.h"
 
@@ -20,7 +22,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel( NEOPIXEL_PIXEL_COUNT, NEOPIXEL_PIN,
 
 struct ColorWheelAnimationModel {
 	struct AnimationTimingModel timing;
-	unsigned int color;
+	unsigned int colorPosition;
 };
 
 struct ColorWheelAnimationModel colorWheelAnimation = {
@@ -54,6 +56,14 @@ struct ChaserAnimationModel chaserAnimation = {
 
 
 //////// Runtime
+
+void updateAnimationRate( struct ApiaryState state );
+void incrementAnimations( struct ApiaryState state );
+void calculateAnimations();
+void calculateColorWheel();
+void calculateChaser();
+void writeAnimations();
+uint32_t wheel( Adafruit_NeoPixel strip, byte wheelPos );
 
 SETUP_PROC( pixels ) {
 	strip.begin();
@@ -89,8 +99,8 @@ void updateAnimationRate( struct ApiaryState state ) {
 //// Increment Animation Progress
 
 void incrementAnimations( struct ApiaryState state ) {
-	colorWheelAnimation.timing = animation_incrementProgress( colorWheelAnimation.timing, state );
-	chaserAnimation.timing = animation_incrementProgress( chaserAnimation.timing, state );
+	colorWheelAnimation.timing = animation_incrementProgress( colorWheelAnimation.timing, state.timeDelta );
+	chaserAnimation.timing = animation_incrementProgress( chaserAnimation.timing, state.timeDelta );
 }
 
 //// Calculate Animations

@@ -69,7 +69,7 @@ RUNLOOP_PROC_ARRAY( runloop ) = {
 
 //////// Setup
 
-setup() {
+void setup() {
 	SETUP_PROC_PTR( proc ) = NULL;
 	int i = 0;
 
@@ -90,7 +90,7 @@ setup() {
 
 //////// Loop
 
-loop() {
+void loop() {
 	RUNLOOP_PROC_PTR( proc ) = NULL;
 	int i = 0;
 
