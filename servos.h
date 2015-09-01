@@ -5,7 +5,8 @@
 
 
 // Servo.h?
-#include <Servo.h>
+#include <PWMServo.h>
+#include <Arduino.h>
 #include <math.h>
 
 #include "global_definitions.h"

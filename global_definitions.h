@@ -3,8 +3,6 @@
 #ifndef __GLOBAL_DEFINITIONS_H__
 #define __GLOBAL_DEFINITIONS_H__ yay
 
-#include <Servo.h>
-
 
 
 //////// Servo.

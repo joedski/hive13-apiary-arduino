@@ -1,13 +1,12 @@
 
-#include <Arduino.h>
 #include "servos.h"
 
 
 
 //////// Static Initialization
 
-Servo hservo;
-Servo iservo;
+PWMServo hservo;
+PWMServo iservo;
 
 struct ServoAnimationModel {
 	struct AnimationTimingModel timing;
