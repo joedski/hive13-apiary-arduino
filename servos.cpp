@@ -1,9 +1,5 @@
 
-#include <Servo.h>
-
-#include "global_definitions.h"
-#include "animation.h"
-
+#include <Arduino.h>
 #include "servos.h"
 
 
@@ -40,7 +36,12 @@ struct ServoAnimationModel servoAnimation = {
 
 //////// Runtime
 
-int mapLightSensorToServoValue( int lightSensorReading );
+// Static because I use the same names in pixels.cpp.
+// int mapLightSensorToServoValue( int lightSensorReading );
+static void updateAnimationRate( struct ApiaryState state );
+static void incrementAnimations( struct ApiaryState state );
+static void calculateAnimations();
+static void writeAnimations();
 
 SETUP_PROC( servos ) {
 	// Attach pins 9 and 10 to servos.
@@ -53,8 +54,8 @@ RUNLOOP_PROC( servos ) {
 	// servoState.mappedLightValue = mapLightSensorToServoValue( state.lightSensorReading );
 	updateAnimationRate( state );
 	incrementAnimations( state );
-	calculateAnimations()
-	writeAnimations()
+	calculateAnimations();
+	writeAnimations();
 }
 
 
@@ -63,10 +64,10 @@ RUNLOOP_PROC( servos ) {
 
 //// Animation Rate
 
-void updateAnimationRate( struct ApiaryState state ) {
+static void updateAnimationRate( struct ApiaryState state ) {
 	int rate100 = map(
-		lightSensorReading,
-		MIN_LIGHT, MAX_LIGHT,
+		state.lightSensorReading,
+		LIGHT_MIN, LIGHT_MAX,
 		SERVO_ANIMATION_RATE100_LOW, SERVO_ANIMATION_RATE100_HIGH
 		);
 
@@ -84,13 +85,13 @@ void updateAnimationRate( struct ApiaryState state ) {
 
 //// Increment Progress
 
-void incrementAnimations( struct ApiaryState state ) {
-	servoAnimation.timing = animation_incrementProgress( servoAnimation.timing, state );
+static void incrementAnimations( struct ApiaryState state ) {
+	servoAnimation.timing = animation_incrementProgress( servoAnimation.timing, state.timeDelta );
 }
 
 //// Calculate Animations
 
-void calculateAnimations() {
+static void calculateAnimations() {
 	float progressFloat = ((float) servoAnimation.timing.progress) / ((float) ANIMATION_PRORGESS_MAX);
 	float angle = progressFloat * 2.0 * PI;
 	float positionFloat = (cos( angle ) + 1.0 / 2.0) * ((float) SERVO_POSITION_MAX);
@@ -100,7 +101,7 @@ void calculateAnimations() {
 
 //// Write Animations
 
-void writeAnimations() {
+static void writeAnimations() {
 	hservo.write( servoAnimation.position );
 	iservo.write( servoAnimation.position );
 }

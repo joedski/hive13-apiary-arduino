@@ -4,6 +4,15 @@
 
 
 
+// Servo.h?
+#include <PWMServo.h>
+#include <math.h>
+
+#include "global_definitions.h"
+#include "animation.h"
+
+
+
 // 1x and 5.5x
 #define SERVO_ANIMATION_RATE100_LOW 100
 #define SERVO_ANIMATION_RATE100_HIGH 550

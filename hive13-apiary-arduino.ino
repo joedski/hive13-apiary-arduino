@@ -1,6 +1,7 @@
 
 #include <Adafruit_NeoPixel.h>
-#include <Servo.h>
+// Servo.h?
+#include <PWMServo.h>
 
 #include "global_definitions.h"
 #include "animation.h"
