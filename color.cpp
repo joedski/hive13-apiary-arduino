@@ -7,6 +7,7 @@
 
 // Sets a full saturation color from an input of 0 ~ 255,
 // mapping through the colors R ~ Y ~ G ~ C ~ B ~ M ~ R
+// Adapted from an Adafruit NeoPixel example function of the same name.
 struct ColorRGB wheel( byte wheelPos ) {
 	if( wheelPos < 85 ) {
 		// 0 ~ 84 :: R ~ Y ~ G
