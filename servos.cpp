@@ -6,17 +6,8 @@
 
 //////// Static Initialization
 
-#define SERVO_POSITION_MAX 100
-#define SERVO_POSITION_MIN 0
-
-// The range of ServoState.mappedLightValue
-#define SERVO_SIGNAL_MIN 0
-#define SERVO_SIGNAL_MAX 1000
-// Determined empirically, this seems to be a useful value for the upper value of the map.
-#define SERVO_SIGNAL_MAP_MAX 600
-
-PWMServo hservo;
-PWMServo iservo;
+Servo hservo;
+Servo iservo;
 
 struct ServoAnimationModel {
 	struct AnimationTimingModel timing;
@@ -44,7 +35,6 @@ static void calculateAnimations();
 static void writeAnimations();
 
 SETUP_PROC( servos ) {
-	// Attach pins 9 and 10 to servos.
 	hservo.attach( SERVO_H_PIN );
 	iservo.attach( SERVO_I_PIN );
 }

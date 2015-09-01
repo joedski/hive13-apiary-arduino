@@ -33,9 +33,6 @@ struct ColorWheelAnimationModel colorWheelAnimation = {
 
 //// Chaser Animation
 
-// What pixels are lit.  3 means every third pixel is lit, 4 means every fourth pixel is lit, etc.
-#define CHASER_PIXEL_PERIOD 3
-
 struct ChaserAnimationModel {
 	struct AnimationTimingModel timing;
 	byte pixelOffset;

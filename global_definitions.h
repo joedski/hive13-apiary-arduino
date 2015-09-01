@@ -3,14 +3,22 @@
 #ifndef __GLOBAL_DEFINITIONS_H__
 #define __GLOBAL_DEFINITIONS_H__ yay
 
+#include <Servo.h>
+
 
 
 //////// Servo.
 
 // Servos that swivel the sign.
 // The H pin (has H, I, and 1) and the I pin (has V, E, and 3)
-#define SERVO_H_PIN 9
-#define SERVO_I_PIN 10
+// These pins are different on different models of Arduino boards.
+// On the Uno, A is 9, B is 10.
+#define SERVO_H_PIN SERVO_PIN_A
+#define SERVO_I_PIN SERVO_PIN_B
+
+
+
+//////// Pixel.
 
 #define NEOPIXEL_PIN 6
 
@@ -24,6 +32,8 @@
 // The range of readings considered useful out of the full 0 ~ 1023 range.
 // Although 500 (covered) ~ 900 (uncovered) was the actual range determined,
 // adding a margin of 50 guarantees the edge values being used.
+// For the most part, this is used in map, as in
+// int other = map( state.lightSensorReading, LIGHT_MIN, LIGHT_MAX, OTHER_MIN, OTHER_MAX );
 #define LIGHT_MIN 550
 #define LIGHT_MAX 850
 
