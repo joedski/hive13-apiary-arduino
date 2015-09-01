@@ -17,7 +17,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel( NEOPIXEL_PIXEL_COUNT, NEOPIXEL_PIN,
 
 struct ColorWheelAnimationModel {
 	struct AnimationTimingModel timing;
-	unsigned int colorPosition;
+	byte colorPosition;
+	byte saturation;
 };
 
 struct ColorWheelAnimationModel colorWheelAnimation = {
@@ -27,6 +28,7 @@ struct ColorWheelAnimationModel colorWheelAnimation = {
 		, .rate100 = 100
 	}
 	, .colorPosition = 0
+	, .saturation = 0
 };
 
 //// Chaser Animation
@@ -36,7 +38,7 @@ struct ColorWheelAnimationModel colorWheelAnimation = {
 
 struct ChaserAnimationModel {
 	struct AnimationTimingModel timing;
-	char pixelOffset;
+	byte pixelOffset;
 };
 
 struct ChaserAnimationModel chaserAnimation = {
@@ -55,8 +57,8 @@ struct ChaserAnimationModel chaserAnimation = {
 // Static because I use the same names in servos.cpp.
 static void updateAnimationRate( struct ApiaryState state );
 static void incrementAnimations( struct ApiaryState state );
-static void calculateAnimations();
-static void calculateColorWheel();
+static void calculateAnimations( struct ApiaryState state );
+static void calculateColorWheel( struct ApiaryState state );
 static void calculateChaser();
 static void writeAnimations();
 
@@ -66,9 +68,21 @@ SETUP_PROC( pixels ) {
 }
 
 RUNLOOP_PROC( pixels ) {
+	// General thoughts on organizing the animation code:
+	// I broke it up into the following general sections:
+	// 
+	// - Updating the animation rate based on the global state.
+	// - Updating the animation's progress based on the current animation rate and the change in time from the last tick.
+	// - Calculating the animation's current variables from both the animation's progress and from the global state.
+	// - Actually calculating and writing out each bit of the current animation.
+	// 
+	// I've tended to defer actually "expanding" the animation's variables into a full "frame"
+	// until the point of writing just to save a bit on memory, and also because that's how it was before.
+	// Whether or not memory is actually a concern here or not is another question entirely.
+
 	updateAnimationRate( state );
 	incrementAnimations( state );
-	calculateAnimations();
+	calculateAnimations( state );
 	writeAnimations();
 }
 
@@ -100,13 +114,18 @@ static void incrementAnimations( struct ApiaryState state ) {
 
 //// Calculate Animations
 
-static void calculateAnimations() {
-	calculateColorWheel();
+static void calculateAnimations( struct ApiaryState state ) {
+	calculateColorWheel( state );
 	calculateChaser();
 }
 
-static void calculateColorWheel() {
+static void calculateColorWheel( struct ApiaryState state ) {
 	colorWheelAnimation.colorPosition = map( colorWheelAnimation.timing.progress, 0, ANIMATION_PRORGESS_MAX, 0, 255 );
+	colorWheelAnimation.saturation = map(
+		state.lightSensorReading,
+		LIGHT_MIN, LIGHT_MAX,
+		0, 255
+		);
 }
 
 static void calculateChaser() {
@@ -127,12 +146,14 @@ static void writeAnimations() {
 	//     and in some cases that may save some cpu clock time.
 
 	int numPixels = strip.numPixels();
-	int color;
+	byte colorHue;
+	struct ColorRGB color;
 
 	for( int i = chaserAnimation.pixelOffset; i < numPixels; i = i + CHASER_PIXEL_PERIOD ) {
 		// Just a bit of fun.
-		color = wheel( strip, (colorWheelAnimation.colorPosition + i) * COLOR_WHEEL_SHIFT_AMOUNT % 255 );
-		strip.setPixelColor( i, color );
+		colorHue = (colorWheelAnimation.colorPosition + i) * COLOR_WHEEL_SHIFT_AMOUNT % 255;
+		color = colorHSV( colorHue, colorWheelAnimation.saturation, 255 );
+		strip.setPixelColor( i, strip.Color( color.r, color.g, color.b ) );
 	}
 
 	strip.show();
@@ -148,27 +169,4 @@ static void writeAnimations() {
 
 //////// Utilities
 
-// Sets a full saturation color from an input of 0 ~ 255,
-// mapping through the colors R ~ Y ~ G ~ C ~ B ~ M ~ R
-uint32_t wheel( Adafruit_NeoPixel strip, byte wheelPos ) {
-	if( wheelPos < 85 ) {
-		// 0 ~ 84 :: G ~ Y ~ R
-		// return strip.Color( wheelPos * 3, 255 - wheelPos * 3, 0 );
-		// 0 ~ 84 :: R ~ Y ~ G
-		return strip.Color( 255 - wheelPos * 3, wheelPos * 3, 0 );
-	} else if( wheelPos < 170 ) {
-		// // 85 ~ 169 :: R ~ M ~ B
-		// wheelPos -= 85;
-		// return strip.Color( 255 - wheelPos * 3, 0, wheelPos * 3 );
-		// 85 ~ 169 :: G ~ C ~ B
-		wheelPos -= 85;
-		return strip.Color( 0, 255 - wheelPos * 3, wheelPos * 3 );
-	} else {
-		// 170 ~ 255 :: B ~ C ~ G
-		// wheelPos -= 170;
-		// return strip.Color( 0, wheelPos * 3, 255 - wheelPos * 3 );
-		// 170 ~ 255 :: B ~ M ~ R
-		wheelPos -= 170;
-		return strip.Color( wheelPos * 3, 0, 255 - wheelPos * 3 );
-	}
-}
+// ...

@@ -8,6 +8,7 @@
 
 #include "global_definitions.h"
 #include "animation.h"
+#include "color.h"
 
 
 
@@ -17,9 +18,6 @@
 
 SETUP_PROC( pixels );
 RUNLOOP_PROC( pixels );
-
-//// Utilities
-uint32_t wheel( Adafruit_NeoPixel strip, byte wheelPos );
 
 
 
