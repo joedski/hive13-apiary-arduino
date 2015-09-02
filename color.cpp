@@ -48,7 +48,7 @@ struct ColorRGB wheel( byte wheelPos ) {
 
 static byte hsvMix( byte component, byte saturation, byte value ) {
 	uint16_t componentInverse = 255 - component;
-	uint16_t saturatedComponent = component + ((componentInverse * (uint16_t)saturation) >> 8);
+	uint16_t saturatedComponent = component + ((componentInverse * (uint16_t)(255 - saturation)) >> 8);
 	return (byte)((saturatedComponent * (uint16_t)value) >> 8);
 }
 
