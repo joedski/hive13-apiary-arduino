@@ -81,9 +81,9 @@ static void incrementAnimations( struct ApiaryState state ) {
 //// Calculate Animations
 
 static void calculateAnimations() {
-	float progressFloat = ((float) servoAnimation.timing.progress) / ((float) ANIMATION_PRORGESS_MAX);
+	float progressFloat = float( servoAnimation.timing.progress ) / float( ANIMATION_PRORGESS_MAX );
 	float angle = progressFloat * 2.0 * PI;
-	float positionFloat = (cos( angle ) + 1.0 / 2.0) * ((float) SERVO_POSITION_MAX);
+	float positionFloat = ((cos( angle ) + 1.0) / 2.0) * float( SERVO_POSITION_MAX ) + float( SERVO_POSITION_MIN );
 
 	servoAnimation.position = (int) lround( positionFloat );
 }

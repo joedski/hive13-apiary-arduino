@@ -30,7 +30,12 @@ struct ApiaryState apiaryState = {
 #define DEBUG_LED_PIN 13
 
 SETUP_PROC( debug ) {
-  pinMode( DEBUG_LED_PIN, OUTPUT );
+	pinMode( DEBUG_LED_PIN, OUTPUT );
+
+#ifdef ENABLE_SERIAL_DEBUG
+	// Serial debug.
+	Serial.begin( 9600 );
+#endif
 }
 
 
@@ -38,15 +43,17 @@ SETUP_PROC( debug ) {
 //////// Sensor
 
 RUNLOOP_PROC( sensors ) {
-	static unsigned long lastTime = 0;
+	apiaryState.lightSensorReading = analogRead( LIGHT_SENSOR_PIN );
+}
 
-	state.lightSensorReading = analogRead( LIGHT_SENSOR_PIN );
+RUNLOOP_PROC( time ) {
+	unsigned long lastTime = 0;
 
-  // Note: The first time this is called, timeDelta is the difference between millis() and 0.
+	// Note: The first time this is called, timeDelta is the difference between millis() and 0.
 	// TODO: Overflow detection?  (That assumes the box is left running for more than 50 days...)
-	lastTime = state.time;
-	state.time = millis();
-	state.timeDelta = state.time - lastTime;
+	lastTime = apiaryState.time;
+	apiaryState.time = millis();
+	apiaryState.timeDelta = apiaryState.time - lastTime;
 }
 
 
@@ -54,15 +61,17 @@ RUNLOOP_PROC( sensors ) {
 //////// Main Procedures
 
 SETUP_PROC_ARRAY( setupArray ) = {
+	SETUP_PROC_NAME( debug ),
 	SETUP_PROC_NAME( pixels ),
-	// SETUP_PROC_NAME( servos ),
+	SETUP_PROC_NAME( servos ),
 	NULL
 };
 
 RUNLOOP_PROC_ARRAY( runloop ) = {
+	RUNLOOP_PROC_NAME( time ),
 	RUNLOOP_PROC_NAME( sensors ),
 	RUNLOOP_PROC_NAME( pixels ),
-	// RUNLOOP_PROC_NAME( servos ),
+	RUNLOOP_PROC_NAME( servos ),
 	NULL
 };
 
@@ -107,18 +116,31 @@ void loop() {
 		++i;
 	}
 
-  // Try to keep to RUNLOOP_DELAY_MS as our pulse.
-  // these are longs rather than unsigned longs.
-  long runloopDuration = apiaryState.time - millis();
-  long remainingDelay = RUNLOOP_DELAY_MS - runloopDuration;
-  int animationTimeOverran = remainingDelay < 0;
+	// Try to keep to RUNLOOP_DELAY_MS as our pulse.
+	// these are longs rather than unsigned longs.
+	long runloopDuration = millis() - apiaryState.time;
+	long remainingDelay = RUNLOOP_DELAY_MS - runloopDuration;
+	int animationTimeOverran = remainingDelay < 0;
 
-  if( animationTimeOverran ) {
-    digitalWrite( DEBUG_LED_PIN, HIGH );
-  }
-  else {
-    digitalWrite( DEBUG_LED_PIN, LOW );
-  }
+	if( animationTimeOverran ) {
+		digitalWrite( DEBUG_LED_PIN, HIGH );
+	}
+	else {
+		digitalWrite( DEBUG_LED_PIN, LOW );
+	}
+
+#if defined(ENABLE_SERIAL_DEBUG) && defined(ENABLE_SERIAL_DEBUG_RUNLOOP)
+	Serial.print( "time (ms): " );
+	Serial.println( apiaryState.time );
+	Serial.print( "time (ms, from millis()): " );
+	Serial.println( millis() );
+	Serial.print( "timeDelta (ms): " );
+	Serial.println( apiaryState.timeDelta );
+	Serial.print( "runloopDuration (ms): " );
+	Serial.println( runloopDuration );
+	Serial.print( "animationTimeOverran: " );
+	Serial.println( animationTimeOverran ? "yes" : "no" );
+#endif
 
 	delay( animationTimeOverran ? 0 : remainingDelay );
 }
