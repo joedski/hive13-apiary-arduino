@@ -60,14 +60,6 @@ static void updateAnimationRate( struct ApiaryState state ) {
 		SERVO_ANIMATION_RATE100_HIGH, SERVO_ANIMATION_RATE100_LOW
 		);
 
-// #if defined(ENABLE_SERIAL_DEBUG) && defined(ENABLE_SERIAL_DEBUG_SERVOS)
-// 	Serial.println( "Servos: updateAnimationRate" );
-// 	Serial.print( "    lightSensorReading: " );
-// 	Serial.println( state.lightSensorReading );
-// 	Serial.print( "    raw rate100: " );
-// 	Serial.println( rate100 );
-// #endif
-
 	// Originally, we had in the map a low value of 1 and a high value of 6,
 	// but in the constrain, a low of 1 and a high of 10.
 	// Also, in the map, the 6 was on the low-light value, and the 1 was on the high-light value,
