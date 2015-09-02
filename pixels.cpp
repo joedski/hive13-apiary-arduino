@@ -24,7 +24,7 @@ struct ColorWheelAnimationModel {
 struct ColorWheelAnimationModel colorWheelAnimation = {
 	.timing = {
 		.progress = 0
-		, .normalDuration = 4000
+		, .normalDuration = 5500
 		, .rate100 = 100
 	}
 	, .colorPosition = 0
@@ -41,7 +41,7 @@ struct ChaserAnimationModel {
 struct ChaserAnimationModel chaserAnimation = {
 	.timing = {
 		.progress = 0
-		, .normalDuration = 4000
+		, .normalDuration = 2000
 		, .rate100 = 100
 	}
 	, .pixelOffset = 0
@@ -122,31 +122,18 @@ static void calculateColorWheel( struct ApiaryState state ) {
 		map(
 			state.lightSensorReading,
 			LIGHT_MIN, LIGHT_MAX,
-			0, 255
+			255, 0
 			),
 		0, 255
 		);
 }
 
 static void calculateChaser() {
-	// chaserAnimation.pixelOffset = chaserAnimation.timing.progress * CHASER_PIXEL_PERIOD / ANIMATION_PRORGESS_MAX;
-	chaserAnimation.pixelOffset = map(
-		chaserAnimation.timing.progress,
-		0, ANIMATION_PRORGESS_MAX,
-		0, CHASER_PIXEL_PERIOD
+	chaserAnimation.pixelOffset = (unsigned int)(
+		(unsigned long)chaserAnimation.timing.progress
+		* (unsigned long)CHASER_PIXEL_PERIOD
+		/ (unsigned long)ANIMATION_PRORGESS_MAX
 		);
-
-#if defined(ENABLE_SERIAL_DEBUG) && defined(ENABLE_SERIAL_DEBUG_PIXELS)
-	Serial.println( "Chaser:" );
-	Serial.print( "    timing.normalDuration = " );
-	Serial.println( chaserAnimation.timing.normalDuration );
-	Serial.print( "    timing.progress = " );
-	Serial.println( chaserAnimation.timing.progress );
-	Serial.print( "    timing.rate100 ="  );
-	Serial.println( chaserAnimation.timing.rate100 );
-	Serial.print( "    pixelOffset = " );
-	Serial.println( chaserAnimation.pixelOffset );
-#endif
 }
 
 //// Write Animations
@@ -158,7 +145,7 @@ static void writeAnimations() {
 	// - writing those pixel values to the hardware lights,
 	// - and finally blanking out those pixels to reset all values to 0.
 	//     Note that the blanking out is NOT written to the hardware lights,
-	//     so the viewer never sees them go out except when they're not extinguished again.
+	//     so the viewer never sees them go out except when they're not lit again.
 	//     Technically we can just overwrite everything back to 0 before showing it,
 	//     and in some cases that may save some cpu clock time.
 
@@ -168,7 +155,7 @@ static void writeAnimations() {
 
 	for( int i = chaserAnimation.pixelOffset; i < numPixels; i = i + CHASER_PIXEL_PERIOD ) {
 		// Just a bit of fun.
-		colorHue = (colorWheelAnimation.colorPosition + i) * COLOR_WHEEL_SHIFT_AMOUNT % 255;
+		colorHue = (byte)((int)(colorWheelAnimation.colorPosition + (i * COLOR_WHEEL_SHIFT_AMOUNT)) % 255);
 		color = colorHSV( colorHue, colorWheelAnimation.saturation, 255 );
 		strip.setPixelColor( i, strip.Color( color.r, color.g, color.b ) );
 	}

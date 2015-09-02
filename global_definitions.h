@@ -8,9 +8,9 @@
 //////// Serial Debug Messages
 
 // Uncomment to have serial messages sent back out.
-#define ENABLE_SERIAL_DEBUG 1
+// #define ENABLE_SERIAL_DEBUG 1
 // #define ENABLE_SERIAL_DEBUG_RUNLOOP 1
-#define ENABLE_SERIAL_DEBUG_SERVOS 1
+// #define ENABLE_SERIAL_DEBUG_SERVOS 1
 // #define ENABLE_SERIAL_DEBUG_PIXELS 1
 
 
@@ -50,7 +50,7 @@
 //////// Runloop Stuff.
 
 // How much delay to try to keep between ticks.
-#define RUNLOOP_DELAY_MS 15
+#define RUNLOOP_DELAY_MS 10
 
 /*********
 Write the top-level runloop procedure with this.

@@ -11,26 +11,29 @@
 struct ColorRGB wheel( byte wheelPos ) {
 	if( wheelPos < 85 ) {
 		// 0 ~ 84 :: R ~ Y ~ G
+		wheelPos *= 3;
 		return {
-			.r = 255 - wheelPos * 3,
-			.g = wheelPos * 3,
+			.r = 255 - wheelPos,
+			.g = wheelPos,
 			.b = 0
 		};
 	} else if( wheelPos < 170 ) {
 		// 85 ~ 169 :: G ~ C ~ B
 		wheelPos -= 85;
+		wheelPos *= 3;
 		return {
 			.r = 0,
-			.g = 255 - wheelPos * 3,
-			.b = wheelPos * 3
+			.g = 255 - wheelPos,
+			.b = wheelPos
 		};
 	} else {
 		// 170 ~ 255 :: B ~ M ~ R
 		wheelPos -= 170;
+		wheelPos *= 3;
 		return {
-			.r = wheelPos * 3,
+			.r = wheelPos,
 			.g = 0,
-			.b = 255 - wheelPos * 3
+			.b = 255 - wheelPos
 		};
 	}
 }
@@ -52,9 +55,12 @@ static byte hsvMix( byte component, byte saturation, byte value ) {
 	return (byte)((saturatedComponent * (uint16_t)value) >> 8);
 }
 
-// at t=0, returns a.  t=1 returns b.  t=0.5 returns a mix of the two.
+// at t=0, returns a.  t=255 returns b.  t=128 returns a mix of the two.
 static byte mix( byte a, byte b, byte t ) {
-	return ((a * t) >> 8) + ((b * (255 - t)) >> 8);
+	return (byte)(
+		(((uint16_t)a * (uint16_t)t) >> 8)
+		+ (((uint16_t)b * (uint16_t)(255 - t)) >> 8)
+	);
 }
 
 // Hue is the wheelPosition in wheel.

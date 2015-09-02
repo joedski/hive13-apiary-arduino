@@ -33,5 +33,9 @@ int normalProgressIcrementForDelta( struct AnimationTimingModel model, unsigned 
 // As said before, it can run backwards if rate100 is negative.
 int progressIncrementForRate( int progressIncrement, int rate100 ) {
 	// all integer maths.
-	return progressIncrement * rate100 / 100;
+	return (int)(
+		(long)progressIncrement
+		* (long)rate100
+		/ 100
+		);
 }
