@@ -4,6 +4,7 @@
 
 
 #define ANIMATION_PRORGESS_MAX 65535
+#define ANIMATION_PRORGESS_MAX_UL 65535ul
 
 struct AnimationTimingModel {
 	// Current progress of the animation.

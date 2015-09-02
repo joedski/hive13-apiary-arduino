@@ -41,7 +41,7 @@ struct ChaserAnimationModel {
 struct ChaserAnimationModel chaserAnimation = {
 	.timing = {
 		.progress = 0
-		, .normalDuration = 1000
+		, .normalDuration = 4000
 		, .rate100 = 100
 	}
 	, .pixelOffset = 0
@@ -122,7 +122,7 @@ static void calculateColorWheel( struct ApiaryState state ) {
 		map(
 			state.lightSensorReading,
 			LIGHT_MIN, LIGHT_MAX,
-			255, 0
+			0, 255
 			),
 		0, 255
 		);

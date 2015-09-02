@@ -8,9 +8,9 @@
 //////// Serial Debug Messages
 
 // Uncomment to have serial messages sent back out.
-// #define ENABLE_SERIAL_DEBUG 1
+#define ENABLE_SERIAL_DEBUG 1
 // #define ENABLE_SERIAL_DEBUG_RUNLOOP 1
-// #define ENABLE_SERIAL_DEBUG_SERVOS 1
+#define ENABLE_SERIAL_DEBUG_SERVOS 1
 // #define ENABLE_SERIAL_DEBUG_PIXELS 1
 
 

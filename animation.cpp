@@ -26,7 +26,7 @@ struct AnimationTimingModel animation_incrementProgress( struct AnimationTimingM
 //////// Utils
 
 int normalProgressIcrementForDelta( struct AnimationTimingModel model, unsigned long msDelta ) {
-	return (int)(((unsigned long) ANIMATION_PRORGESS_MAX) * msDelta / model.normalDuration);
+	return (int)(ANIMATION_PRORGESS_MAX_UL * msDelta / model.normalDuration);
 }
 
 // rate100 is the rate * 100.  Fixed point number for integer maths.

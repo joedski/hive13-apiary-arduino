@@ -16,7 +16,7 @@ struct ServoAnimationModel {
 struct ServoAnimationModel servoAnimation = {
 	.timing = {
 		.progress = 0
-		, .normalDuration = 8000
+		, .normalDuration = 4000
 		, .rate100 = 100
 	}
 	, .position = SERVO_POSITION_MIN
@@ -57,8 +57,16 @@ static void updateAnimationRate( struct ApiaryState state ) {
 	int rate100 = map(
 		state.lightSensorReading,
 		LIGHT_MIN, LIGHT_MAX,
-		SERVO_ANIMATION_RATE100_LOW, SERVO_ANIMATION_RATE100_HIGH
+		SERVO_ANIMATION_RATE100_HIGH, SERVO_ANIMATION_RATE100_LOW
 		);
+
+// #if defined(ENABLE_SERIAL_DEBUG) && defined(ENABLE_SERIAL_DEBUG_SERVOS)
+// 	Serial.println( "Servos: updateAnimationRate" );
+// 	Serial.print( "    lightSensorReading: " );
+// 	Serial.println( state.lightSensorReading );
+// 	Serial.print( "    raw rate100: " );
+// 	Serial.println( rate100 );
+// #endif
 
 	// Originally, we had in the map a low value of 1 and a high value of 6,
 	// but in the constrain, a low of 1 and a high of 10.
@@ -75,7 +83,23 @@ static void updateAnimationRate( struct ApiaryState state ) {
 //// Increment Progress
 
 static void incrementAnimations( struct ApiaryState state ) {
+#if defined(ENABLE_SERIAL_DEBUG) && defined(ENABLE_SERIAL_DEBUG_SERVOS)
+	unsigned long beforeProgress = servoAnimation.timing.progress;
+#endif
+
 	servoAnimation.timing = animation_incrementProgress( servoAnimation.timing, state.timeDelta );
+
+#if defined(ENABLE_SERIAL_DEBUG) && defined(ENABLE_SERIAL_DEBUG_SERVOS)
+	Serial.println( "Servos: incrementAnimations" );
+	Serial.print( "    rate100: " );
+	Serial.println( servoAnimation.timing.rate100 );
+	// Serial.print( "    progress before: " );
+	// Serial.println( beforeProgress );
+	// Serial.print( "    progress after: " );
+	// Serial.println( servoAnimation.timing.progress );
+	Serial.print( "    progress increment: " );
+	Serial.println( servoAnimation.timing.progress - beforeProgress );
+#endif
 }
 
 //// Calculate Animations
